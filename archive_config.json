@@ -1,0 +1,12 @@
+{
+  "archive_name": "Brookline Bird Club eBird Archive",
+  "source_csv": "data/source/BBC data download 2026-06-18.csv",
+  "database": "data/build/bbc-ebird-archive.sqlite",
+  "metadata_file": "data/build/archive_metadata.json",
+  "current_year": 2026,
+  "minimum_observations": 600000,
+  "refresh_cadence": "monthly",
+  "public_download_dir": "public_downloads",
+  "public_sqlite_filename": "bbc-ebird-archive-current.sqlite",
+  "public_raw_csv_filename": "bbc-ebird-raw-export-current.csv"
+}

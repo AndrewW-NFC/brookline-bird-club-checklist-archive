@@ -1,0 +1,30 @@
+# Python environments and caches
+.venv/
+venv/
+bbc-ebird-venv/
+__pycache__/
+*.py[cod]
+
+# macOS sidecar files
+.DS_Store
+._*
+
+# Local source exports and generated databases
+data/source/*
+data/build/*
+*.csv
+*.db
+*.sqlite
+*.sqlite3
+
+# Public-download staging output
+public_downloads/*
+
+# Keep directory placeholders tracked
+!data/source/.gitkeep
+!data/build/.gitkeep
+!public_downloads/.gitkeep
+
+# Local backup files from ad hoc editing sessions
+*.backup*
+*.old

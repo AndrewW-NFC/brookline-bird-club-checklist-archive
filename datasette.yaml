@@ -1,0 +1,140 @@
+title: Brookline Bird Club eBird Archive
+description: |
+  A searchable prototype archive built from the Brookline Bird Club eBird account export.
+
+  The Brookline Bird Club eBird Archive is intended to make the club's historical bird records easier to browse by species, checklist, location, date, and comments.
+
+  This archive is built from periodic eBird account exports, not from the live eBird API. It may lag behind current eBird records. Original checklist records remain on eBird, and checklist links in this archive point back to eBird where available.
+
+  Some historical checklists use broad eBird locations, such as county-level locations or route-style locations. In those cases, checklist comments may provide better detail about the actual places visited. The "Location Precision" field is a derived helper field added for this archive; it is not an original eBird field.
+
+  This attribution and caveat language is provisional and should be reviewed before public launch.
+
+databases:
+  bbc-ebird-archive:
+    title: Brookline Bird Club eBird Archive
+    description: |
+      Prototype Datasette database for exploring Brookline Bird Club eBird checklist and observation data.
+      Use the public entry-point views first: Search Species Records, Browse Checklists, Browse Locations, and Browse Species Summary.
+
+    tables:
+      search_species_records:
+        title: Search Species Records
+        description: |
+          Main search page for individual bird observation records. Use this view to search by species, date, county,
+          location, protocol, count, breeding code, observation details, or checklist comments.
+        facets:
+          - Common Name
+          - County
+          - Decade
+          - Month
+          - Location Precision
+          - Protocol
+          - Presence Only
+
+      browse_checklists:
+        title: Browse Checklists
+        description: |
+          One row per eBird checklist. Use this view to browse trips, dates, locations, effort, species totals,
+          comments, and links back to the original eBird checklist.
+        facets:
+          - County
+          - Decade
+          - Month
+          - Protocol
+          - Location Precision
+
+      browse_locations:
+        title: Browse Locations
+        description: |
+          One row per eBird location used by the Brookline Bird Club account. Location Precision is a derived field
+          that flags broad or generic eBird locations where comments may better describe the actual trip route.
+        facets:
+          - County
+          - Location Precision
+
+      browse_species_summary:
+        title: Browse Species Summary
+        description: |
+          One row per species, with total observation rows, checklist count, first date, last date, and high count.
+          This is a good starting point for species-level exploration.
+
+      broad_location_checklists:
+        title: Broad Location Checklists
+        description: |
+          Checklists where the formal eBird location appears broad, generic, route-like, or county-level. These records
+          are especially likely to need checklist comments for understanding the actual places visited.
+        facets:
+          - County
+          - Decade
+          - Month
+          - Location Precision
+          - Protocol
+
+      high_counts:
+        title: High Counts
+        description: |
+          Numeric observation records sorted by count. Use this view to explore unusually large counts by species,
+          location, county, date, or decade.
+        facets:
+          - Common Name
+          - County
+          - Decade
+          - Month
+          - Location Precision
+
+      earliest_records_by_species:
+        title: Earliest Records by Species
+        description: |
+          The earliest dated Brookline Bird Club record for each species in this export.
+
+      latest_records_by_species:
+        title: Latest Records by Species
+        description: |
+          The most recent dated Brookline Bird Club record for each species in this export.
+
+      historical_field_card_checklists:
+        title: Historical Field Card Checklists
+        description: |
+          Checklists using the Historical protocol or comments that appear to reference Brookline Bird Club field card data.
+        facets:
+          - County
+          - Decade
+          - Month
+          - Location Precision
+
+      comment_search_helper:
+        title: Comment Search Helper
+        description: |
+          Checklist comments and observation details combined in one view. Useful for searching leader names,
+          route places, weather notes, historical notes, and other text that may not appear in formal eBird location fields.
+        facets:
+          - County
+          - Decade
+          - Month
+          - Source Type
+
+      observations:
+        title: Source Table - Observations
+        description: |
+          Source observation table. This is useful for diagnostics and development, but most visitors should use Search Species Records.
+
+      checklists:
+        title: Source Table - Checklists
+        description: |
+          Source checklist table. This is useful for diagnostics and development, but most visitors should use Browse Checklists.
+
+      locations:
+        title: Source Table - Locations
+        description: |
+          Source location summary table. Most visitors should use Browse Locations.
+
+      species:
+        title: Source Table - Species
+        description: |
+          Source species summary table. Most visitors should use Browse Species Summary.
+
+      import_warnings:
+        title: Import Warnings
+        description: |
+          Import quality-control counts. Useful for checking date parsing, count parsing, broad locations, and missing coordinates.

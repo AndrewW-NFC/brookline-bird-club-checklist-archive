@@ -1,2 +1,98 @@
-# brookline-bird-club-checklist-archive
-In progress. Preparing a searchable database of the BBC's checklist archive as kept on eBird and managed by David Scott
+# Brookline Bird Club Checklist Archive
+
+This repository builds a searchable Datasette archive from periodic Brookline Bird Club eBird account exports. It does not use the eBird API; the source of truth is the full export file downloaded from the club account.
+
+The archive is intended to make BBC checklist and observation history easier to browse by species, checklist, location, date, count, protocol, breeding code, observation details, and checklist comments.
+
+## What is tracked here
+
+- Importer and maintenance scripts in `scripts/`
+- Datasette metadata in `datasette.yaml`
+- Shared build settings in `archive_config.json`
+- Maintainer notes in `docs/`
+- Provisional attribution and caveat language in `ATTRIBUTION.md`
+
+Large generated files are intentionally not tracked by Git:
+
+- Raw eBird exports in `data/source/`
+- Built SQLite databases and metadata in `data/build/`
+- Public-download staging files in `public_downloads/`
+
+The current full export and SQLite database are each larger than GitHub's normal per-file limit, so they should be regenerated locally, uploaded as release assets, or handled through a large-file strategy rather than committed directly.
+
+## Quick Start
+
+1. Create the local environment:
+
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate
+   pip install -r requirements.txt
+   ```
+
+2. Put the latest eBird export at the path configured in `archive_config.json`:
+
+   ```text
+   data/source/BBC data download 2026-06-18.csv
+   ```
+
+   You can use a different filename if you update `source_csv` in `archive_config.json`.
+
+3. Rebuild the archive:
+
+   ```bash
+   scripts/rebuild.sh
+   ```
+
+4. Run Datasette locally:
+
+   ```bash
+   source .venv/bin/activate
+   datasette data/build/bbc-ebird-archive.sqlite --metadata datasette.yaml
+   ```
+
+5. Open the local URL printed by Datasette, usually:
+
+   ```text
+   http://127.0.0.1:8001/
+   ```
+
+## Public Entry Views
+
+The importer creates these public-facing Datasette views:
+
+- `search_species_records`
+- `browse_checklists`
+- `browse_locations`
+- `browse_species_summary`
+- `broad_location_checklists`
+- `high_counts`
+- `earliest_records_by_species`
+- `latest_records_by_species`
+- `historical_field_card_checklists`
+- `comment_search_helper`
+
+The raw source tables are still present for diagnostics:
+
+- `observations`
+- `checklists`
+- `locations`
+- `species`
+- `import_warnings`
+
+## Monthly Refresh
+
+For routine updates, download the latest same-structure export, update `source_csv` in `archive_config.json` if needed, then run:
+
+```bash
+scripts/rebuild.sh
+scripts/prepare_public_downloads.sh
+```
+
+See [docs/monthly-update.md](docs/monthly-update.md) for the full checklist.
+
+## Caveats
+
+Some historical checklists use broad eBird locations, such as county-level or route-style locations. The importer preserves the original eBird location and adds a derived `Location Precision` helper field. In many cases, checklist comments give better detail about actual places visited.
+
+Attribution and public-use language in [ATTRIBUTION.md](ATTRIBUTION.md) is provisional and should be reviewed before public launch.
