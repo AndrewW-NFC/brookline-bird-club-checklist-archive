@@ -64,3 +64,37 @@ The current full generated database is too large to commit to GitHub. For a full
 - Use a Northflank persistent volume only if a server-side writable database is needed.
 
 For this archive, the preferred long-term shape is still a read-only Datasette service with a regenerated SQLite database.
+
+## Full Archive Local Docker Image
+
+Use this path when you want to package the full generated SQLite database into a Docker image from your local machine.
+
+First rebuild the archive if needed:
+
+```bash
+scripts/rebuild.sh
+```
+
+Then build the full image:
+
+```bash
+docker build \
+  -f Dockerfile.full \
+  -t bbc-ebird-archive-full .
+```
+
+Run it locally:
+
+```bash
+docker run --rm -p 8001:8001 bbc-ebird-archive-full
+```
+
+Then open:
+
+```text
+http://127.0.0.1:8001/
+```
+
+This image contains the ignored local file `data/build/bbc-ebird-archive.sqlite`. It should not be built by Northflank directly from GitHub unless the full database is supplied by another mechanism, because the database is intentionally not committed to the repository.
+
+To run this full image on Northflank, push the locally built image to a container registry and create a Northflank deployment service from that image. The sample-data combined service can remain in place as the lightweight GitHub-built demo.

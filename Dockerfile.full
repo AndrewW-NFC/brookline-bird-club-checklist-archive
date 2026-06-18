@@ -1,0 +1,28 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PORT=8001
+ENV DATASETTE_DB=data/build/bbc-ebird-archive.sqlite
+
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY data/build/bbc-ebird-archive.sqlite ./data/build/bbc-ebird-archive.sqlite
+COPY data/build/archive_metadata.json ./data/build/archive_metadata.json
+COPY datasette.yaml README.md ATTRIBUTION.md ./
+
+RUN python - <<'PY'
+from pathlib import Path
+
+db = Path("data/build/bbc-ebird-archive.sqlite")
+if not db.exists():
+    raise SystemExit("Full archive database is missing from the Docker build context.")
+print(f"Included full archive database: {db} ({db.stat().st_size:,} bytes)")
+PY
+
+EXPOSE 8001
+
+CMD ["sh", "-c", "datasette serve \"$DATASETTE_DB\" --metadata datasette.yaml --host 0.0.0.0 --port \"${PORT:-8001}\""]
