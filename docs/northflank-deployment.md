@@ -98,3 +98,40 @@ http://127.0.0.1:8001/
 This image contains the ignored local file `data/build/bbc-ebird-archive.sqlite`. It should not be built by Northflank directly from GitHub unless the full database is supplied by another mechanism, because the database is intentionally not committed to the repository.
 
 To run this full image on Northflank, push the locally built image to a container registry and create a Northflank deployment service from that image. The sample-data combined service can remain in place as the lightweight GitHub-built demo.
+
+## Full Archive Image In GitHub Container Registry
+
+The full archive image has been published to GitHub Container Registry:
+
+```text
+ghcr.io/andreww-nfc/bbc-ebird-archive-full:2026-06-18
+ghcr.io/andreww-nfc/bbc-ebird-archive-full:latest
+```
+
+The `2026-06-18` tag is preferred for demos because it points to a specific archive build. The `latest` tag is convenient for quick redeploys.
+
+The image is multi-platform and supports:
+
+- `linux/amd64`
+- `linux/arm64`
+
+The GitHub package is currently private. To deploy it on Northflank, choose one of these paths:
+
+1. Add GitHub Container Registry credentials in Northflank.
+2. Make the GitHub package public, then use the image path without credentials.
+
+For private registry credentials, Northflank needs:
+
+```text
+Registry: ghcr.io
+Username: AndrewW-NFC
+Password/token: a GitHub personal access token with read:packages permission
+```
+
+Then create a Northflank deployment service from this external image:
+
+```text
+ghcr.io/andreww-nfc/bbc-ebird-archive-full:2026-06-18
+```
+
+Expose HTTP traffic to container port `8001`.

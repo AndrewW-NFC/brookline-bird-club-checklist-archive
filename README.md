@@ -123,6 +123,8 @@ The repository includes a Dockerfile for deploying a sample-data Datasette proto
 
 For local testing with the full generated SQLite database, use `Dockerfile.full`. This packages `data/build/bbc-ebird-archive.sqlite` into a local Docker image without committing the large database to GitHub.
 
+The current full archive image is also available in GitHub Container Registry as `ghcr.io/andreww-nfc/bbc-ebird-archive-full:2026-06-18`.
+
 ## Caveats
 
 Some historical checklists use broad eBird locations, such as county-level or route-style locations. The importer preserves the original eBird location and adds a derived `Location Precision` helper field. In many cases, checklist comments give better detail about actual places visited.
