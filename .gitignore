@@ -24,6 +24,8 @@ public_downloads/*
 !data/source/.gitkeep
 !data/build/.gitkeep
 !public_downloads/.gitkeep
+!data/sample/
+!data/sample/bbc-ebird-sample-1000.csv
 
 # Local backup files from ad hoc editing sessions
 *.backup*

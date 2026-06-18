@@ -57,6 +57,32 @@ The current full export and SQLite database are each larger than GitHub's normal
    http://127.0.0.1:8001/
    ```
 
+## Sample Data
+
+The repository includes a tracked representative sample export:
+
+```text
+data/sample/bbc-ebird-sample-1000.csv
+```
+
+This file contains 1,000 rows from the full Brookline Bird Club eBird export, selected to cover all species in the current archive plus a mix of historical records, recent records, broad locations, presence-only counts, checklist comments, observation details, protocols, counties, and high counts. It is intended for quick testing, GitHub-based development, and vendor review without requiring the full local export.
+
+Build a sample SQLite database with:
+
+```bash
+python scripts/build_bbc_ebird_db.py \
+  data/sample/bbc-ebird-sample-1000.csv \
+  data/build/bbc-ebird-sample.sqlite \
+  --replace \
+  --current-year 2026
+```
+
+Then launch it with:
+
+```bash
+datasette data/build/bbc-ebird-sample.sqlite --metadata datasette.yaml
+```
+
 ## Public Entry Views
 
 The importer creates these public-facing Datasette views:

@@ -27,6 +27,7 @@ This repository is a Datasette build pipeline for the Brookline Bird Club eBird 
 | Path | Purpose |
 |---|---|
 | `data/source/` | Local-only source eBird exports. Ignored by Git. |
+| `data/sample/` | Tracked representative 1,000-row sample export for testing and review. |
 | `data/build/` | Local-only generated SQLite databases and build metadata. Ignored by Git. |
 | `public_downloads/` | Local-only staging folder for public download artifacts. Ignored by Git except for README/placeholders. |
 
@@ -40,6 +41,8 @@ These are created by the scripts and intentionally ignored by Git:
 - `public_downloads/bbc-ebird-archive-current.sqlite`
 - `public_downloads/bbc-ebird-raw-export-current.csv`
 - `public_downloads/archive_metadata.json`
+
+The representative sample file `data/sample/bbc-ebird-sample-1000.csv` is intentionally tracked so the importer can be tested without the full local export.
 
 ## Removed From the ChatGPT Bundle
 
