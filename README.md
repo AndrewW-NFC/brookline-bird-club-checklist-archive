@@ -117,6 +117,10 @@ scripts/prepare_public_downloads.sh
 
 See [docs/monthly-update.md](docs/monthly-update.md) for the full checklist.
 
+## Temporary Hosting
+
+The repository includes a Dockerfile for deploying a sample-data Datasette prototype to Northflank or another container host. See [docs/northflank-deployment.md](docs/northflank-deployment.md).
+
 ## Caveats
 
 Some historical checklists use broad eBird locations, such as county-level or route-style locations. The importer preserves the original eBird location and adds a derived `Location Precision` helper field. In many cases, checklist comments give better detail about actual places visited.
