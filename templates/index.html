@@ -53,6 +53,31 @@
       font-size: 1.12rem;
     }
     main { padding: 32px 0 56px; }
+    .primary {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(220px, 0.8fr);
+      gap: 22px;
+      align-items: center;
+      margin-bottom: 28px;
+      padding: 24px;
+      border: 1px solid #bdd0c7;
+      border-radius: 8px;
+      background: #fff;
+    }
+    .primary h2 {
+      margin: 0 0 8px;
+      font-size: 1.55rem;
+    }
+    .primary p {
+      margin: 0;
+      color: var(--muted);
+    }
+    .primary-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+    }
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -80,6 +105,19 @@
     }
     .card span {
       color: var(--muted);
+    }
+    .link-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px 18px;
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .link-list a {
+      display: inline-block;
+      padding: 6px 0;
+      font-weight: 700;
     }
     .section {
       margin-top: 32px;
@@ -125,6 +163,8 @@
     }
     @media (max-width: 760px) {
       header { padding-top: 32px; }
+      .primary { grid-template-columns: 1fr; }
+      .primary-actions { justify-content: flex-start; }
       .two { grid-template-columns: 1fr; }
     }
   </style>
@@ -148,32 +188,49 @@
   </header>
 
   <main class="wrap">
-    <h2>Start Here</h2>
+    <section class="primary">
+      <div>
+        <h2>Start with bird records</h2>
+        <p>
+          Search individual observation records across the archive by species, date, county,
+          location, count, breeding code, checklist comments, and observation notes.
+        </p>
+      </div>
+      <div class="primary-actions">
+        <a class="button" href="{{ db_path }}/search_species_records">Search Bird Records</a>
+        <a class="button secondary" href="{{ db_path }}">Open Full Database</a>
+      </div>
+    </section>
+
+    <h2>Common Ways In</h2>
     <div class="grid">
-      <a class="card" href="{{ db_path }}/search_species_records">
-        <strong>Search Bird Records</strong>
-        <span>Find species records by name, date, county, location, count, protocol, breeding code, and comments.</span>
-      </a>
       <a class="card" href="{{ db_path }}/browse_checklists">
         <strong>Browse Checklists</strong>
-        <span>Review one eBird checklist at a time, including date, place, effort, comments, and the eBird link.</span>
+        <span>Review trips by date, place, effort, species totals, comments, and eBird checklist link.</span>
       </a>
       <a class="card" href="{{ db_path }}/browse_species_summary">
         <strong>Species Summary</strong>
         <span>See one row per species with checklist totals, first and latest dates, and high counts.</span>
       </a>
-      <a class="card" href="{{ db_path }}/browse_locations">
-        <strong>Places And Locations</strong>
-        <span>Explore locations used by the club account, with checklist counts and a location precision flag.</span>
-      </a>
-      <a class="card" href="{{ db_path }}/historical_field_card_checklists">
-        <strong>Historical Field Cards</strong>
-        <span>Focus on historical checklists and field-card-derived records.</span>
-      </a>
       <a class="card" href="{{ db_path }}/comment_search_helper">
-        <strong>Search Comments And Notes</strong>
-        <span>Search checklist comments and observation details for leaders, routes, weather, and historical notes.</span>
+        <strong>Search Comments and Notes</strong>
+        <span>Look for leaders, routes, weather notes, historical context, and other text fields.</span>
       </a>
+    </div>
+
+    <div class="section">
+      <h2>Deeper Archive Tools</h2>
+      <p>
+        These views are available for more specific archive questions and data review.
+      </p>
+      <ul class="link-list">
+        <li><a href="{{ db_path }}/browse_locations">Places and Locations</a></li>
+        <li><a href="{{ db_path }}/historical_field_card_checklists">Historical Field Card Checklists</a></li>
+        <li><a href="{{ db_path }}/high_counts">Highest Counts</a></li>
+        <li><a href="{{ db_path }}/broad_location_checklists">Broad or Route Location Checklists</a></li>
+        <li><a href="{{ db_path }}/earliest_records_by_species">First Dated Records by Species</a></li>
+        <li><a href="{{ db_path }}/latest_records_by_species">Latest Dated Records by Species</a></li>
+      </ul>
     </div>
 
     <div class="section two">
