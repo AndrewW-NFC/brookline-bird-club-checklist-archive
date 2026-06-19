@@ -12,7 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY scripts ./scripts
 COPY data/sample ./data/sample
-COPY templates ./templates
+COPY static ./static
 COPY archive_config.json datasette.yaml README.md ATTRIBUTION.md ./
 
 RUN mkdir -p data/build \
@@ -24,4 +24,4 @@ RUN mkdir -p data/build \
 
 EXPOSE 8001
 
-CMD ["sh", "-c", "datasette serve \"$DATASETTE_DB\" --metadata datasette.yaml --template-dir templates --setting suggest_facets off --host 0.0.0.0 --port \"${PORT:-8001}\""]
+CMD ["sh", "-c", "datasette serve \"$DATASETTE_DB\" --metadata datasette.yaml --static static:static --setting suggest_facets off --host 0.0.0.0 --port \"${PORT:-8001}\""]

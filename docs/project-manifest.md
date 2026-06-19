@@ -9,7 +9,7 @@ This repository is a Datasette build pipeline for the Brookline Bird Club eBird 
 | `README.md` | Main project overview and quick start. |
 | `archive_config.json` | Central build configuration: source CSV, output database, current-year date pivot, and public-download filenames. |
 | `datasette.yaml` | Datasette title, descriptions, table/view labels, and facets. |
-| `templates/index.html` | Guided Datasette homepage for the records prototype. |
+| `static/bbc-datasette.css` | Small legibility adjustments for the default Datasette interface. |
 | `requirements.txt` | Python package requirements for building and running the archive. |
 | `ATTRIBUTION.md` | Provisional attribution and caveat language for public launch. |
 

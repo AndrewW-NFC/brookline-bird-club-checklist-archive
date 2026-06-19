@@ -12,7 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY data/build/bbc-ebird-archive.sqlite ./data/build/bbc-ebird-archive.sqlite
 COPY data/build/archive_metadata.json ./data/build/archive_metadata.json
-COPY templates ./templates
+COPY static ./static
 COPY datasette.yaml README.md ATTRIBUTION.md ./
 
 RUN python - <<'PY'
@@ -26,4 +26,4 @@ PY
 
 EXPOSE 8001
 
-CMD ["sh", "-c", "datasette serve \"$DATASETTE_DB\" --metadata datasette.yaml --template-dir templates --setting suggest_facets off --host 0.0.0.0 --port \"${PORT:-8001}\""]
+CMD ["sh", "-c", "datasette serve \"$DATASETTE_DB\" --metadata datasette.yaml --static static:static --setting suggest_facets off --host 0.0.0.0 --port \"${PORT:-8001}\""]

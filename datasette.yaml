@@ -1,30 +1,28 @@
+extra_css_urls:
+  - /static/bbc-datasette.css
+
 title: Brookline Bird Club eBird Archive
 description: |
-  A searchable prototype archive built from the Brookline Bird Club eBird account export.
+  A searchable prototype built from the Brookline Bird Club eBird account export.
 
-  The Brookline Bird Club eBird Archive is intended to make the club's historical bird records easier to browse by species, checklist, location, date, and comments.
+  Start with Search Bird Records, Browse Checklists, Species Summary, or Places and Locations.
 
-  This prototype is a browser for the club's existing records. The underlying data reflects decades of BBC record keeping, historical trip documentation, eBird checklist entry, and the club statistician's long-running work to collate and preserve those records.
+  The underlying records reflect decades of BBC record keeping, historical trip documentation, eBird checklist entry, and the club statistician's long-running work to collate and preserve those records.
 
-  This archive is built from periodic eBird account exports, not from the live eBird API. It may lag behind current eBird records. Original checklist records remain on eBird, and checklist links in this archive point back to eBird where available.
-
-  Some historical checklists use broad eBird locations, such as county-level locations or route-style locations. In those cases, checklist comments may provide better detail about the actual places visited. The "Location Precision" field is a derived helper field added for this archive; it is not an original eBird field.
-
-  This attribution and caveat language is provisional and should be reviewed before public launch.
+  Some historical records use broad eBird locations. Checklist comments may provide better detail about the actual places visited.
 
 databases:
   bbc-ebird-archive:
     title: Brookline Bird Club eBird Archive
     description: |
-      Prototype Datasette database for exploring Brookline Bird Club eBird checklist and observation data.
-      Use the public entry points first: Search Bird Records, Browse Checklists, Places and Locations, and Species Summary.
+      Prototype Datasette database for exploring Brookline Bird Club checklist and observation data.
+      Start with the public entry points below; source tables remain available for deeper review.
 
     tables:
       search_species_records:
         title: Search Bird Records
         description: |
-          Main search page for individual bird observation records. Use this table to search by species, date, county,
-          location, protocol, count, breeding code, observation details, or checklist comments.
+          Individual observation records, searchable by species, date, county, location, count, protocol, breeding code, observation details, and checklist comments.
         facets:
           - Common Name
           - County
@@ -37,8 +35,7 @@ databases:
       browse_checklists:
         title: Browse Checklists
         description: |
-          One row per eBird checklist. Use this table to browse trips, dates, locations, effort, species totals,
-          comments, and links back to the original eBird checklist.
+          One row per eBird checklist, with date, location, effort, species total, comments, and a link back to eBird.
         sort_desc: Date
         facets:
           - County
@@ -50,8 +47,7 @@ databases:
       browse_locations:
         title: Places and Locations
         description: |
-          One row per eBird location used by the Brookline Bird Club account. Location Precision is a derived field
-          that flags broad or generic eBird locations where comments may better describe the actual trip route.
+          One row per eBird location used by the Brookline Bird Club account. Location Precision is a derived helper for broad or generic locations.
         facets:
           - County
           - Location Precision
@@ -59,15 +55,13 @@ databases:
       browse_species_summary:
         title: Species Summary
         description: |
-          One row per species, with total observation rows, checklist count, first date, last date, and high count.
-          This is a good starting point for species-level exploration.
+          One row per species, with observation totals, checklist totals, first date, last date, and high count.
         sort: Taxonomic Order
 
       broad_location_checklists:
         title: Broad Or Route Location Checklists
         description: |
-          Checklists where the formal eBird location appears broad, generic, route-like, or county-level. These records
-          are especially likely to need checklist comments for understanding the actual places visited.
+          Checklists where the formal eBird location appears broad, generic, route-like, or county-level.
         facets:
           - County
           - Decade
@@ -78,8 +72,7 @@ databases:
       high_counts:
         title: Highest Counts
         description: |
-          Numeric observation records sorted by count. Use this table to explore unusually large counts by species,
-          location, county, date, or decade.
+          Numeric observation records sorted by count.
         sort_desc: Numeric Count
         facets:
           - Common Name
@@ -91,7 +84,7 @@ databases:
       earliest_records_by_species:
         title: First Dated Records by Species
         description: |
-          The earliest dated Brookline Bird Club record for each species in this export. These are useful leads for archive review, not final species-account judgments.
+          The earliest dated Brookline Bird Club record for each species in this export. Useful as archive leads, not final species-account judgments.
         sort: Taxonomic Order
 
       latest_records_by_species:
@@ -103,7 +96,7 @@ databases:
       historical_field_card_checklists:
         title: Historical Field Card Checklists
         description: |
-          Checklists using the Historical protocol or comments that appear to reference Brookline Bird Club field card data.
+          Checklists using the Historical protocol or comments that appear to reference BBC field card data.
         sort: Date
         facets:
           - County
@@ -114,8 +107,7 @@ databases:
       comment_search_helper:
         title: Search Comments and Notes
         description: |
-          Checklist comments and observation details combined in one table. Useful for searching leader names,
-          route places, weather notes, historical notes, and other text that may not appear in formal eBird location fields.
+          Checklist comments and observation details combined in one table.
         facets:
           - County
           - Decade

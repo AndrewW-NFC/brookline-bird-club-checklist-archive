@@ -104,11 +104,11 @@ To run this full image on Northflank, push the locally built image to a containe
 The full archive image has been published to GitHub Container Registry:
 
 ```text
-ghcr.io/andreww-nfc/bbc-ebird-archive-full:2026-06-18-guided
+ghcr.io/andreww-nfc/bbc-ebird-archive-full:2026-06-18-default
 ghcr.io/andreww-nfc/bbc-ebird-archive-full:latest
 ```
 
-The `2026-06-18-guided` tag is preferred for demos because it points to a specific archive build with the simplified guided homepage and indexed public entry tables. The `latest` tag is convenient for quick redeploys.
+The `2026-06-18-default` tag is preferred for demos because it points to a specific archive build using the default Datasette presentation with indexed public entry tables. The `latest` tag is convenient for quick redeploys.
 
 The image is multi-platform and supports:
 
@@ -128,7 +128,7 @@ Password/token: a GitHub personal access token with read:packages permission
 Then create a Northflank deployment service from this external image:
 
 ```text
-ghcr.io/andreww-nfc/bbc-ebird-archive-full:2026-06-18-guided
+ghcr.io/andreww-nfc/bbc-ebird-archive-full:2026-06-18-default
 ```
 
 Expose HTTP traffic to container port `8001`.

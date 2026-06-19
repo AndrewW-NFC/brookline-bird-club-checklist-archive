@@ -1,0 +1,55 @@
+body {
+  line-height: 1.5;
+}
+
+h1, h2, h3 {
+  letter-spacing: 0;
+}
+
+p, li, td, th {
+  line-height: 1.45;
+}
+
+.description,
+.metadata-description,
+.table-description,
+.database-description {
+  max-width: 78rem;
+}
+
+table.rows-and-columns td,
+table.rows-and-columns th {
+  vertical-align: top;
+}
+
+table.rows-and-columns td {
+  max-width: 34rem;
+}
+
+table.rows-and-columns td:first-child,
+table.rows-and-columns th:first-child {
+  padding-left: 0.7rem;
+}
+
+.suggested-facets,
+.facet-results {
+  line-height: 1.4;
+}
+
+.db-table {
+  padding: 0.75rem 0 0.9rem;
+  border-top: 1px solid #e2e2e2;
+}
+
+.db-table h3 {
+  margin-bottom: 0.25rem;
+}
+
+.db-table p {
+  margin: 0.25rem 0;
+}
+
+.db-table em {
+  color: #555;
+  font-size: 0.94rem;
+}
