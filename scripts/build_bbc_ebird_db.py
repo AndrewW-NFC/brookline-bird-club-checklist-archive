@@ -16,7 +16,7 @@ Notes:
 - Keeps raw date/count fields and adds parsed/derived fields.
 - Two-digit years are parsed using a current-year pivot. By default, yy <= current year
   maps to 20yy and yy > current year maps to 19yy. For 2026, 26=>2026, 46=>1946.
-- Creates observation/checklist/location/species tables, public views, indexes, and FTS5 tables.
+- Creates observation/checklist/location/species tables, public entry tables, indexes, and FTS5 tables.
 """
 
 from __future__ import annotations
@@ -224,6 +224,16 @@ def create_schema(conn: sqlite3.Connection) -> None:
         DROP TABLE IF EXISTS import_warnings;
         DROP VIEW IF EXISTS observations_public;
         DROP VIEW IF EXISTS checklists_public;
+        DROP TABLE IF EXISTS search_species_records;
+        DROP TABLE IF EXISTS browse_checklists;
+        DROP TABLE IF EXISTS browse_locations;
+        DROP TABLE IF EXISTS browse_species_summary;
+        DROP TABLE IF EXISTS broad_location_checklists;
+        DROP TABLE IF EXISTS high_counts;
+        DROP TABLE IF EXISTS earliest_records_by_species;
+        DROP TABLE IF EXISTS latest_records_by_species;
+        DROP TABLE IF EXISTS historical_field_card_checklists;
+        DROP TABLE IF EXISTS comment_search_helper;
         DROP TABLE IF EXISTS observations_fts;
         DROP TABLE IF EXISTS checklists_fts;
 
@@ -539,14 +549,22 @@ def add_warnings(conn: sqlite3.Connection) -> None:
 
 
 def create_public_views(conn: sqlite3.Connection) -> None:
-    """Create public-facing Datasette views for novice archive browsing."""
+    """Create public-facing Datasette entry tables for archive browsing.
+
+    These are materialized instead of views so Datasette can paginate, facet,
+    and count rows without repeatedly resolving large joins.
+    """
     conn.executescript("""
     DROP VIEW IF EXISTS search_species_records;
     DROP VIEW IF EXISTS browse_checklists;
     DROP VIEW IF EXISTS browse_locations;
     DROP VIEW IF EXISTS browse_species_summary;
+    DROP TABLE IF EXISTS search_species_records;
+    DROP TABLE IF EXISTS browse_checklists;
+    DROP TABLE IF EXISTS browse_locations;
+    DROP TABLE IF EXISTS browse_species_summary;
 
-    CREATE VIEW search_species_records AS
+    CREATE TABLE search_species_records AS
     SELECT
         o.common_name AS "Common Name",
         o.scientific_name AS "Scientific Name",
@@ -572,7 +590,7 @@ def create_public_views(conn: sqlite3.Connection) -> None:
     LEFT JOIN checklists c
         ON o.submission_id = c.submission_id;
 
-    CREATE VIEW browse_checklists AS
+    CREATE TABLE browse_checklists AS
     SELECT
         date_iso AS "Date",
         year AS "Year",
@@ -596,7 +614,7 @@ def create_public_views(conn: sqlite3.Connection) -> None:
         ebird_url AS "eBird Checklist"
     FROM checklists;
 
-    CREATE VIEW browse_locations AS
+    CREATE TABLE browse_locations AS
     WITH location_dates AS (
         SELECT
             location_id,
@@ -624,7 +642,7 @@ def create_public_views(conn: sqlite3.Connection) -> None:
     LEFT JOIN location_dates d
         ON l.location_id = d.location_id;
 
-    CREATE VIEW browse_species_summary AS
+    CREATE TABLE browse_species_summary AS
     SELECT
         common_name AS "Common Name",
         scientific_name AS "Scientific Name",
@@ -639,9 +657,9 @@ def create_public_views(conn: sqlite3.Connection) -> None:
 
 
 def create_supplemental_public_views(conn: sqlite3.Connection) -> None:
-    """Create supplemental public archive views for Datasette.
+    """Create supplemental public archive entry tables for Datasette.
 
-    These views are derived from the normalized source tables and are safe to recreate
+    These tables are derived from the normalized source tables and are safe to recreate
     on every monthly data refresh.
     """
     conn.executescript("""
@@ -654,8 +672,14 @@ def create_supplemental_public_views(conn: sqlite3.Connection) -> None:
     DROP VIEW IF EXISTS latest_records_by_species;
     DROP VIEW IF EXISTS historical_field_card_checklists;
     DROP VIEW IF EXISTS comment_search_helper;
+    DROP TABLE IF EXISTS broad_location_checklists;
+    DROP TABLE IF EXISTS high_counts;
+    DROP TABLE IF EXISTS earliest_records_by_species;
+    DROP TABLE IF EXISTS latest_records_by_species;
+    DROP TABLE IF EXISTS historical_field_card_checklists;
+    DROP TABLE IF EXISTS comment_search_helper;
 
-    CREATE VIEW broad_location_checklists AS
+    CREATE TABLE broad_location_checklists AS
     SELECT
         date_iso AS "Date",
         year AS "Year",
@@ -677,7 +701,7 @@ def create_supplemental_public_views(conn: sqlite3.Connection) -> None:
     FROM checklists
     WHERE location_precision_flag IN ('generic_county_location', 'broad_or_route_location');
 
-    CREATE VIEW high_counts AS
+    CREATE TABLE high_counts AS
     SELECT
         o.common_name AS "Common Name",
         o.scientific_name AS "Scientific Name",
@@ -701,7 +725,7 @@ def create_supplemental_public_views(conn: sqlite3.Connection) -> None:
     WHERE o.count_numeric IS NOT NULL
     ORDER BY o.count_numeric DESC;
 
-    CREATE VIEW earliest_records_by_species AS
+    CREATE TABLE earliest_records_by_species AS
     WITH ranked AS (
         SELECT
             o.*,
@@ -719,6 +743,7 @@ def create_supplemental_public_views(conn: sqlite3.Connection) -> None:
     SELECT
         common_name AS "Common Name",
         scientific_name AS "Scientific Name",
+        taxonomic_order AS "Taxonomic Order",
         count_raw AS "Count",
         count_numeric AS "Numeric Count",
         date_iso AS "Date",
@@ -735,7 +760,7 @@ def create_supplemental_public_views(conn: sqlite3.Connection) -> None:
     FROM ranked
     WHERE rn = 1;
 
-    CREATE VIEW latest_records_by_species AS
+    CREATE TABLE latest_records_by_species AS
     WITH ranked AS (
         SELECT
             o.*,
@@ -753,6 +778,7 @@ def create_supplemental_public_views(conn: sqlite3.Connection) -> None:
     SELECT
         common_name AS "Common Name",
         scientific_name AS "Scientific Name",
+        taxonomic_order AS "Taxonomic Order",
         count_raw AS "Count",
         count_numeric AS "Numeric Count",
         date_iso AS "Date",
@@ -769,7 +795,7 @@ def create_supplemental_public_views(conn: sqlite3.Connection) -> None:
     FROM ranked
     WHERE rn = 1;
 
-    CREATE VIEW historical_field_card_checklists AS
+    CREATE TABLE historical_field_card_checklists AS
     SELECT
         date_iso AS "Date",
         year AS "Year",
@@ -789,7 +815,7 @@ def create_supplemental_public_views(conn: sqlite3.Connection) -> None:
        OR checklist_comments LIKE '%field card%'
        OR checklist_comments LIKE '%historic field card%';
 
-    CREATE VIEW comment_search_helper AS
+    CREATE TABLE comment_search_helper AS
     SELECT
         'Checklist Comment' AS "Source Type",
         submission_id AS "Submission ID",
@@ -828,6 +854,63 @@ def create_supplemental_public_views(conn: sqlite3.Connection) -> None:
     """)
 
 
+def index_public_entry_tables(conn: sqlite3.Connection) -> None:
+    """Add indexes used by Datasette sorting and facets on public entry tables."""
+    conn.executescript("""
+        CREATE INDEX idx_search_records_common_name ON search_species_records("Common Name");
+        CREATE INDEX idx_search_records_date ON search_species_records("Date");
+        CREATE INDEX idx_search_records_county ON search_species_records("County");
+        CREATE INDEX idx_search_records_decade ON search_species_records("Decade");
+        CREATE INDEX idx_search_records_month ON search_species_records("Month");
+        CREATE INDEX idx_search_records_location_precision ON search_species_records("Location Precision");
+        CREATE INDEX idx_search_records_protocol ON search_species_records("Protocol");
+        CREATE INDEX idx_search_records_presence_only ON search_species_records("Presence Only");
+        CREATE INDEX idx_search_records_submission_id ON search_species_records("Submission ID");
+
+        CREATE INDEX idx_browse_checklists_date ON browse_checklists("Date");
+        CREATE INDEX idx_browse_checklists_county ON browse_checklists("County");
+        CREATE INDEX idx_browse_checklists_decade ON browse_checklists("Decade");
+        CREATE INDEX idx_browse_checklists_month ON browse_checklists("Month");
+        CREATE INDEX idx_browse_checklists_protocol ON browse_checklists("Protocol");
+        CREATE INDEX idx_browse_checklists_location_precision ON browse_checklists("Location Precision");
+
+        CREATE INDEX idx_browse_locations_county ON browse_locations("County");
+        CREATE INDEX idx_browse_locations_location_precision ON browse_locations("Location Precision");
+        CREATE INDEX idx_browse_locations_checklist_count ON browse_locations("Checklist Count");
+
+        CREATE INDEX idx_species_summary_common_name ON browse_species_summary("Common Name");
+        CREATE INDEX idx_species_summary_tax_order ON browse_species_summary("Taxonomic Order");
+        CREATE INDEX idx_species_summary_first_date ON browse_species_summary("First Date");
+        CREATE INDEX idx_species_summary_last_date ON browse_species_summary("Last Date");
+
+        CREATE INDEX idx_broad_locations_date ON broad_location_checklists("Date");
+        CREATE INDEX idx_broad_locations_county ON broad_location_checklists("County");
+        CREATE INDEX idx_broad_locations_decade ON broad_location_checklists("Decade");
+        CREATE INDEX idx_broad_locations_month ON broad_location_checklists("Month");
+        CREATE INDEX idx_broad_locations_precision ON broad_location_checklists("Location Precision");
+
+        CREATE INDEX idx_high_counts_common_name ON high_counts("Common Name");
+        CREATE INDEX idx_high_counts_numeric_count ON high_counts("Numeric Count");
+        CREATE INDEX idx_high_counts_county ON high_counts("County");
+        CREATE INDEX idx_high_counts_decade ON high_counts("Decade");
+        CREATE INDEX idx_high_counts_month ON high_counts("Month");
+
+        CREATE INDEX idx_earliest_records_common_name ON earliest_records_by_species("Common Name");
+        CREATE INDEX idx_earliest_records_tax_order ON earliest_records_by_species("Taxonomic Order");
+        CREATE INDEX idx_latest_records_common_name ON latest_records_by_species("Common Name");
+        CREATE INDEX idx_latest_records_tax_order ON latest_records_by_species("Taxonomic Order");
+
+        CREATE INDEX idx_historical_checklists_date ON historical_field_card_checklists("Date");
+        CREATE INDEX idx_historical_checklists_county ON historical_field_card_checklists("County");
+        CREATE INDEX idx_historical_checklists_decade ON historical_field_card_checklists("Decade");
+
+        CREATE INDEX idx_comment_helper_source_type ON comment_search_helper("Source Type");
+        CREATE INDEX idx_comment_helper_date ON comment_search_helper("Date");
+        CREATE INDEX idx_comment_helper_county ON comment_search_helper("County");
+        CREATE INDEX idx_comment_helper_decade ON comment_search_helper("Decade");
+    """)
+
+
 def drop_legacy_public_views(conn: sqlite3.Connection) -> None:
     """Remove older prototype views that should not appear in the public Datasette interface."""
     conn.executescript("""
@@ -857,6 +940,7 @@ def main() -> None:
         build_summary_tables(conn)
         create_public_views(conn)
         create_supplemental_public_views(conn)
+        index_public_entry_tables(conn)
         drop_legacy_public_views(conn)
         print("Creating indexes and full-text search tables...")
         create_indexes_views_fts(conn)

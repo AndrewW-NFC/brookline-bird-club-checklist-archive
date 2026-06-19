@@ -30,9 +30,9 @@ Then open the local URL printed by Datasette, usually:
 http://127.0.0.1:8001/
 ```
 
-## Public Entry Views
+## Public Entry Points
 
-The main public-facing Datasette views are:
+The main public-facing Datasette entry points are:
 
 - `search_species_records`
 - `browse_checklists`

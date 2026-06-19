@@ -9,6 +9,7 @@ This repository is a Datasette build pipeline for the Brookline Bird Club eBird 
 | `README.md` | Main project overview and quick start. |
 | `archive_config.json` | Central build configuration: source CSV, output database, current-year date pivot, and public-download filenames. |
 | `datasette.yaml` | Datasette title, descriptions, table/view labels, and facets. |
+| `templates/index.html` | Guided Datasette homepage for the records prototype. |
 | `requirements.txt` | Python package requirements for building and running the archive. |
 | `ATTRIBUTION.md` | Provisional attribution and caveat language for public launch. |
 
@@ -16,9 +17,9 @@ This repository is a Datasette build pipeline for the Brookline Bird Club eBird 
 
 | Path | Purpose |
 |---|---|
-| `scripts/build_bbc_ebird_db.py` | Main importer. Converts an eBird export CSV/TSV into a normalized SQLite database with summary tables, public views, indexes, and full-text search tables. |
+| `scripts/build_bbc_ebird_db.py` | Main importer. Converts an eBird export CSV/TSV into a normalized SQLite database with summary tables, public entry tables, indexes, and full-text search tables. |
 | `scripts/rebuild.sh` | Monthly rebuild wrapper. Creates `.venv` if needed, installs requirements, rebuilds the database, writes metadata, and runs smoke tests. |
-| `scripts/smoke_test.sh` | Standalone database verification script. Checks row counts, public views, old-view cleanup, and date parsing. |
+| `scripts/smoke_test.sh` | Standalone database verification script. Checks row counts, public entry points, old-view cleanup, and date parsing. |
 | `scripts/write_archive_metadata.py` | Writes machine-readable metadata for the current local build. |
 | `scripts/prepare_public_downloads.sh` | Copies the current SQLite database, raw CSV, metadata, and README into `public_downloads/`. |
 

@@ -83,9 +83,9 @@ Then launch it with:
 datasette data/build/bbc-ebird-sample.sqlite --metadata datasette.yaml
 ```
 
-## Public Entry Views
+## Public Entry Points
 
-The importer creates these public-facing Datasette views:
+The importer creates these public-facing Datasette entry points:
 
 - `search_species_records`
 - `browse_checklists`
@@ -98,7 +98,7 @@ The importer creates these public-facing Datasette views:
 - `historical_field_card_checklists`
 - `comment_search_helper`
 
-The raw source tables are still present for diagnostics:
+The raw source tables are still present for diagnostics and deeper archive work:
 
 - `observations`
 - `checklists`
@@ -123,7 +123,7 @@ The repository includes a Dockerfile for deploying a sample-data Datasette proto
 
 For local testing with the full generated SQLite database, use `Dockerfile.full`. This packages `data/build/bbc-ebird-archive.sqlite` into a local Docker image without committing the large database to GitHub.
 
-The current full archive image is also available in GitHub Container Registry as `ghcr.io/andreww-nfc/bbc-ebird-archive-full:2026-06-18`.
+The current full archive image is also available in GitHub Container Registry as `ghcr.io/andreww-nfc/bbc-ebird-archive-full:2026-06-18-optimized`.
 
 ## Caveats
 

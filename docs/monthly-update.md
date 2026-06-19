@@ -58,7 +58,7 @@ These values may change as the dataset grows, but these conditions should remain
 - Checklists should be nonzero.
 - Species should be nonzero.
 - Locations should be nonzero.
-- Public views should equal 10.
+- Public entry points should equal 10.
 - Old prototype views should equal 0.
 - Blank or unparsed dates should equal 0, unless the export format changes.
 

@@ -43,7 +43,7 @@ def main():
             "first_date": scalar(conn, "SELECT MIN(date_iso) FROM observations WHERE date_iso IS NOT NULL"),
             "last_date": scalar(conn, "SELECT MAX(date_iso) FROM observations WHERE date_iso IS NOT NULL"),
         },
-        "public_views": [
+        "public_entry_points": [
             "search_species_records",
             "browse_checklists",
             "browse_locations",

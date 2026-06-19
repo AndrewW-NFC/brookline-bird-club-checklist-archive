@@ -104,21 +104,18 @@ To run this full image on Northflank, push the locally built image to a containe
 The full archive image has been published to GitHub Container Registry:
 
 ```text
-ghcr.io/andreww-nfc/bbc-ebird-archive-full:2026-06-18
+ghcr.io/andreww-nfc/bbc-ebird-archive-full:2026-06-18-optimized
 ghcr.io/andreww-nfc/bbc-ebird-archive-full:latest
 ```
 
-The `2026-06-18` tag is preferred for demos because it points to a specific archive build. The `latest` tag is convenient for quick redeploys.
+The `2026-06-18-optimized` tag is preferred for demos because it points to a specific archive build with the guided homepage and indexed public entry tables. The `latest` tag is convenient for quick redeploys.
 
 The image is multi-platform and supports:
 
 - `linux/amd64`
 - `linux/arm64`
 
-The GitHub package is currently private. To deploy it on Northflank, choose one of these paths:
-
-1. Add GitHub Container Registry credentials in Northflank.
-2. Make the GitHub package public, then use the image path without credentials.
+The GitHub package is currently public. If a future image is private, Northflank can still deploy it with GitHub Container Registry credentials.
 
 For private registry credentials, Northflank needs:
 
@@ -131,7 +128,9 @@ Password/token: a GitHub personal access token with read:packages permission
 Then create a Northflank deployment service from this external image:
 
 ```text
-ghcr.io/andreww-nfc/bbc-ebird-archive-full:2026-06-18
+ghcr.io/andreww-nfc/bbc-ebird-archive-full:2026-06-18-optimized
 ```
 
 Expose HTTP traffic to container port `8001`.
+
+Both Docker entry points disable Datasette's automatic suggested-facet scanner. The public entry tables still have explicit configured facets, but turning off automatic suggestions avoids extra exploratory queries on the largest tables.

@@ -24,7 +24,7 @@ if not db_path.exists():
 
 conn = sqlite3.connect(db_path)
 
-required_views = [
+required_public_entry_points = [
     "search_species_records",
     "browse_checklists",
     "browse_locations",
@@ -44,11 +44,11 @@ observations = get_count("SELECT COUNT(*) FROM observations")
 checklists = get_count("SELECT COUNT(*) FROM checklists")
 species = get_count("SELECT COUNT(*) FROM species")
 locations = get_count("SELECT COUNT(*) FROM locations")
-public_views_count = get_count(
-    "SELECT COUNT(*) FROM sqlite_master WHERE type = 'view' AND name IN ({})".format(
-        ",".join("?" for _ in required_views)
+public_entry_count = get_count(
+    "SELECT COUNT(*) FROM sqlite_master WHERE type IN ('table', 'view') AND name IN ({})".format(
+        ",".join("?" for _ in required_public_entry_points)
     ),
-    required_views,
+    required_public_entry_points,
 )
 old_views_count = get_count(
     "SELECT COUNT(*) FROM sqlite_master WHERE type = 'view' AND name IN ('observations_public', 'checklists_public')"
@@ -62,7 +62,7 @@ print(f"  observations: {observations}")
 print(f"  checklists: {checklists}")
 print(f"  species: {species}")
 print(f"  locations: {locations}")
-print(f"  public_views: {public_views_count}")
+print(f"  public_entry_points: {public_entry_count}")
 print(f"  old_public_views_should_be_zero: {old_views_count}")
 print(f"  blank_or_unparsed_date: {unparsed_dates}")
 
@@ -76,8 +76,8 @@ if species <= 0:
     errors.append("species count is zero")
 if locations <= 0:
     errors.append("locations count is zero")
-if public_views_count != len(required_views):
-    errors.append(f"expected {len(required_views)} public views, found {public_views_count}")
+if public_entry_count != len(required_public_entry_points):
+    errors.append(f"expected {len(required_public_entry_points)} public entry points, found {public_entry_count}")
 if old_views_count != 0:
     errors.append("old prototype views still exist")
 if unparsed_dates != 0:
