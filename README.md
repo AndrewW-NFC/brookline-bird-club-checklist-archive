@@ -123,7 +123,7 @@ The repository includes a Dockerfile for deploying a sample-data Datasette proto
 
 For local testing with the full generated SQLite database, use `Dockerfile.full`. This packages `data/build/bbc-ebird-archive.sqlite` into a local Docker image without committing the large database to GitHub.
 
-The current full archive image is also available in GitHub Container Registry as `ghcr.io/andreww-nfc/bbc-ebird-archive-full:2026-06-18-optimized`.
+The current full archive image is also available in GitHub Container Registry as `ghcr.io/andreww-nfc/bbc-ebird-archive-full:2026-06-18-guided`.
 
 ## Caveats
 
